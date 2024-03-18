@@ -48,7 +48,7 @@ public:
 	 * @brief Get the World-to-View matrix of the camera.
 	 * @return World-to-View matrix.
 	*/
-	linalg::mat4f WorldToViewMatrix() const noexcept;
+	linalg::mat4f WorldToViewMatrix(float dx, float dy) const noexcept;
 
 	/**
 	 * @brief get the Matrix transforming from View space to Clip space
@@ -71,6 +71,9 @@ private:
 	// numerical precision in the z-buffer
 	float m_near_plane;
 	float m_far_plane;
+
+	float x_view_angle = 0.0f;
+	float y_view_angle = 0.0f;
 
 	linalg::vec3f m_position;
 };

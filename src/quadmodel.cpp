@@ -12,7 +12,7 @@ QuadModel::QuadModel(
 
 	// Populate the vertex array with 4 Vertices
 	Vertex v0, v1, v2, v3;
-	v0.Position = { -0.5, -0.5f, 0.0f };
+	v0.Position = { -0.5, -0.5f, 0.5f };
 	v0.Normal = { 0, 0, 1 };
 	v0.TexCoord = { 0, 0 };
 	v1.Position = { 0.5, -0.5f, 0.0f };
@@ -29,6 +29,11 @@ QuadModel::QuadModel(
 	vertices.push_back(v2);
 	vertices.push_back(v3);
 
+	v0.Position = { -1.5, -0.5f, 0.0f };
+	v0.Normal = { 0, 0, 1 };
+	v0.TexCoord = { 0, 0 };
+	vertices.push_back(v0);
+
 	// Populate the index array with two triangles
 	// Triangle #1
 	indices.push_back(0);
@@ -38,6 +43,10 @@ QuadModel::QuadModel(
 	indices.push_back(1);
 	indices.push_back(2);
 	indices.push_back(3);
+
+	indices.push_back(2);
+	indices.push_back(3);
+	indices.push_back(4);
 
 	// Vertex array descriptor
 	D3D11_BUFFER_DESC vertexbufferDesc { 0 };

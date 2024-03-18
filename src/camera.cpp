@@ -12,7 +12,7 @@ void Camera::Move(const vec3f& direction) noexcept
 	m_position += direction;
 }
 
-mat4f Camera::WorldToViewMatrix() const noexcept
+mat4f Camera::WorldToViewMatrix(float dx, float dy) const noexcept
 {
 	// Assuming a camera's position and rotation is defined by matrices T(p) and R,
 	// the View-to-World transform is T(p)*R (for a first-person style camera).
@@ -21,7 +21,10 @@ mat4f Camera::WorldToViewMatrix() const noexcept
 	//		inverse(T(p)*R) = inverse(R)*inverse(T(p)) = transpose(R)*T(-p)
 	// Since now there is no rotation, this matrix is simply T(-p)
 
-	return mat4f::translation(-m_position);
+	mat4f R = mat4f::rotation(0, -dx, -dy);
+	R.transpose();
+
+	return R * mat4f::translation(-m_position);
 }
 
 mat4f Camera::ProjectionMatrix() const noexcept
