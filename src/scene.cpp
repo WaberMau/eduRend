@@ -165,7 +165,7 @@ void OurTestScene::Render()
 	UpdateTransformationBuffer(m_sponza_transform, m_view_matrix, m_projection_matrix);
 	m_sponza->Render();
 
-	UpdateCBuffer();
+	UpdateLCBuffer();
 }
 
 void OurTestScene::Release()
