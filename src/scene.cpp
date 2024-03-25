@@ -203,7 +203,7 @@ void OurTestScene::InitTransformationBuffer()
 	ASSERT(hr = m_dxdevice->CreateBuffer(&matrixBufferDesc, nullptr, &m_transformation_buffer));
 }
 
-void OurTestScene::InitCBuffer()
+void OurTestScene::InitLCBuffer()
 {
 	HRESULT hr;
 	D3D11_BUFFER_DESC matrixBufferDesc = { 0 };
@@ -231,7 +231,7 @@ void OurTestScene::UpdateTransformationBuffer(
 	m_dxdevice_context->Unmap(m_transformation_buffer, 0);
 }
 
-void OurTestScene::UpdateCBuffer() 
+void OurTestScene::UpdateLCBuffer() 
 {
 	D3D11_MAPPED_SUBRESOURCE resource;
 	m_dxdevice_context->Map(lightcam_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
