@@ -32,6 +32,7 @@ OurTestScene::OurTestScene(
 { 
 	InitTransformationBuffer();
 	// + init other CBuffers
+	InitCBuffer();
 }
 
 //
@@ -67,22 +68,26 @@ void OurTestScene::Update(
 
 	mousedx += (float)input_handler.GetMouseDeltaX() / mouse_sensitivity;
 	mousedy += (float)input_handler.GetMouseDeltaY() / mouse_sensitivity;
+	if (mousedy > fPI / 2)
+		mousedy = fPI / 2;
+	if (mousedy < -fPI / 2)
+		mousedy = -fPI / 2;
 
 	//m_camera->WorldToViewMatrix(mousedx, mousedy);
 
 	// Basic camera control
 	if (input_handler.IsKeyPressed(Keys::W))
-		m_camera->Move({ 0.0f, 0.0f, -m_camera_velocity * dt });
+		m_camera->Move({ 0.0f, 0.0f, -m_camera_velocity * dt , 0});
 	if (input_handler.IsKeyPressed(Keys::S))
-		m_camera->Move({ 0.0f, 0.0f, m_camera_velocity * dt });
+		m_camera->Move({ 0.0f, 0.0f, m_camera_velocity * dt , 0});
 	if (input_handler.IsKeyPressed(Keys::Right) || input_handler.IsKeyPressed(Keys::D))
-		m_camera->Move({ m_camera_velocity * dt, 0.0f, 0.0f });
+		m_camera->Move({ m_camera_velocity * dt, 0.0f, 0.0f , 0});
 	if (input_handler.IsKeyPressed(Keys::Left) || input_handler.IsKeyPressed(Keys::A))
-		m_camera->Move({ -m_camera_velocity * dt, 0.0f, 0.0f });
+		m_camera->Move({ -m_camera_velocity * dt, 0.0f, 0.0f , 0});
 	if (input_handler.IsKeyPressed(Keys::Up))
-		m_camera->Move({ 0.0f, m_camera_velocity * dt, 0.0f });
+		m_camera->Move({ 0.0f, m_camera_velocity * dt, 0.0f , 0});
 	if (input_handler.IsKeyPressed(Keys::Down))
-		m_camera->Move({ 0.0f, -m_camera_velocity * dt, 0.0f });
+		m_camera->Move({ 0.0f, -m_camera_velocity * dt, 0.0f , 0});
 
 	// Now set/update object transformations
 	// This can be done using any sequence of transformation matrices,
@@ -91,7 +96,7 @@ void OurTestScene::Update(
 	// via e.g. Mquad = linalg::mat4f_identity; 
 
 	// Quad model-to-world transformation
-	m_quad_transform = mat4f::translation(0, 0, 0) *			// No translation
+	m_quad_transform = mat4f::translation(0, 10, 0) *			// No translation
 		mat4f::rotation(-m_angle, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
 		mat4f::scaling(1.5, 1.5, 1.5);				// Scale uniformly to 150%
 
@@ -137,13 +142,15 @@ void OurTestScene::Render()
 	// Bind transformation_buffer to slot b0 of the VS
 	m_dxdevice_context->VSSetConstantBuffers(0, 1, &m_transformation_buffer);
 
+	m_dxdevice_context->PSSetConstantBuffers(0, 1, &lightcam_buffer);
+
 	// Obtain the matrices needed for rendering from the camera
 	m_view_matrix = m_camera->WorldToViewMatrix(mousedx, mousedy);
 	m_projection_matrix = m_camera->ProjectionMatrix();
 
 	// Load matrices + the Quad's transformation to the device and render it
-	//UpdateTransformationBuffer(m_quad_transform, m_view_matrix, m_projection_matrix);
-	//m_quad->Render();
+	UpdateTransformationBuffer(m_quad_transform, m_view_matrix, m_projection_matrix);
+	m_quad->Render();
 
 	UpdateTransformationBuffer(m_cube_transform, m_view_matrix, m_projection_matrix);
 	m_cube->Render();
@@ -157,6 +164,8 @@ void OurTestScene::Render()
 	// Load matrices + Sponza's transformation to the device and render it
 	UpdateTransformationBuffer(m_sponza_transform, m_view_matrix, m_projection_matrix);
 	m_sponza->Render();
+
+	UpdateCBuffer();
 }
 
 void OurTestScene::Release()
@@ -167,6 +176,7 @@ void OurTestScene::Release()
 	SAFE_DELETE(m_camera);
 
 	SAFE_RELEASE(m_transformation_buffer);
+	SAFE_RELEASE(lightcam_buffer);
 	// + release other CBuffers
 }
 
@@ -193,6 +203,19 @@ void OurTestScene::InitTransformationBuffer()
 	ASSERT(hr = m_dxdevice->CreateBuffer(&matrixBufferDesc, nullptr, &m_transformation_buffer));
 }
 
+void OurTestScene::InitCBuffer()
+{
+	HRESULT hr;
+	D3D11_BUFFER_DESC matrixBufferDesc = { 0 };
+	matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	matrixBufferDesc.ByteWidth = sizeof(LightCamBuffer);
+	matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	matrixBufferDesc.MiscFlags = 0;
+	matrixBufferDesc.StructureByteStride = 0;
+	ASSERT(hr = m_dxdevice->CreateBuffer(&matrixBufferDesc, nullptr, &lightcam_buffer));
+}
+
 void OurTestScene::UpdateTransformationBuffer(
 	mat4f ModelToWorldMatrix,
 	mat4f WorldToViewMatrix,
@@ -206,4 +229,18 @@ void OurTestScene::UpdateTransformationBuffer(
 	matrixBuffer->WorldToViewMatrix = WorldToViewMatrix;
 	matrixBuffer->ProjectionMatrix = ProjectionMatrix;
 	m_dxdevice_context->Unmap(m_transformation_buffer, 0);
+}
+
+void OurTestScene::UpdateCBuffer() 
+{
+	D3D11_MAPPED_SUBRESOURCE resource;
+	m_dxdevice_context->Map(lightcam_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+	LightCamBuffer* LCBuffer = (LightCamBuffer*)resource.pData;
+	//TODO: Clean up
+	testLight.z = 3;
+	testLight.y = 1;
+	LCBuffer->Light_Position = testLight;
+	LCBuffer->Camera_Position = vec4f(m_camera->m_position, 0);
+	//matrixBuffer->WorldToViewMatrix = WorldToViewMatrix;
+	m_dxdevice_context->Unmap(lightcam_buffer, 0);
 }

@@ -42,16 +42,16 @@ Cube::Cube(
 
 	//Face 2
 	v0.Position = { -0.5, -0.5f, 0.0f };
-	v0.Normal = { 0, 0, 1 };
+	v0.Normal = { -1, 0, 0 };
 	v0.TexCoord = { 0, 0 };
 	v1.Position = { -0.5, 0.5f, 0.0f };
-	v1.Normal = { 0, 0, 1 };
+	v1.Normal = { -1, 0, 0 };
 	v1.TexCoord = { 0, 1 };
 	v2.Position = { -0.5, -0.5f, -1.0f };
-	v2.Normal = { 0, 0, 1 };
+	v2.Normal = { -1, 0, 0 };
 	v2.TexCoord = { 1, 1 };
 	v3.Position = { -0.5, 0.5f, -1.0f };
-	v3.Normal = { 0, 0, 1 };
+	v3.Normal = { -1, 0, 0 };
 	v3.TexCoord = { 1, 0 };
 	vertices.push_back(v0);
 	vertices.push_back(v1);
@@ -69,16 +69,16 @@ Cube::Cube(
 
 	//Face 3
 	v0.Position = { -0.5, -0.5f, -1.0f };
-	v0.Normal = { 0, 0, 1 };
+	v0.Normal = { 0, 0, -1 };
 	v0.TexCoord = { 0, 0 };
 	v1.Position = { -0.5, 0.5f, -1.0f };
-	v1.Normal = { 0, 0, 1 };
+	v1.Normal = { 0, 0, -1 };
 	v1.TexCoord = { 0, 1 };
 	v2.Position = { 0.5, -0.5f, -1.0f };
-	v2.Normal = { 0, 0, 1 };
+	v2.Normal = { 0, 0, -1 };
 	v2.TexCoord = { 1, 1 };
 	v3.Position = { 0.5, 0.5f, -1.0f };
-	v3.Normal = { 0, 0, 1 };
+	v3.Normal = { 0, 0, -1 };
 	v3.TexCoord = { 1, 0 };
 	vertices.push_back(v0);
 	vertices.push_back(v1);
@@ -96,16 +96,16 @@ Cube::Cube(
 
 	//Face 4
 	v0.Position = { 0.5, -0.5f, 0.0f };
-	v0.Normal = { 0, 0, 1 };
+	v0.Normal = { 1, 0, 0 };
 	v0.TexCoord = { 0, 0 };
 	v1.Position = { 0.5, 0.5f, 0.0f };
-	v1.Normal = { 0, 0, 1 };
+	v1.Normal = { 1, 0, 0 };
 	v1.TexCoord = { 0, 1 };
 	v2.Position = { 0.5, -0.5f, -1.0f };
-	v2.Normal = { 0, 0, 1 };
+	v2.Normal = { 1, 0, 0 };
 	v2.TexCoord = { 1, 1 };
 	v3.Position = { 0.5, 0.5f, -1.0f };
-	v3.Normal = { 0, 0, 1 };
+	v3.Normal = { 1, 0, 0 };
 	v3.TexCoord = { 1, 0 };
 	vertices.push_back(v0);
 	vertices.push_back(v1);
@@ -123,16 +123,16 @@ Cube::Cube(
 
 	//Face 5
 	v0.Position = { 0.5, 0.5f, 0.0f };
-	v0.Normal = { 0, 0, 1 };
+	v0.Normal = { 0, 1, 0 };
 	v0.TexCoord = { 0, 0 };
 	v1.Position = { -0.5, 0.5f, 0.0f };
-	v1.Normal = { 0, 0, 1 };
+	v1.Normal = { 0, 1, 0 };
 	v1.TexCoord = { 0, 1 };
 	v2.Position = { 0.5, 0.5f, -1.0f };
-	v2.Normal = { 0, 0, 1 };
+	v2.Normal = { 0, 1, 0 };
 	v2.TexCoord = { 1, 1 };
 	v3.Position = { -0.5, 0.5f, -1.0f };
-	v3.Normal = { 0, 0, 1 };
+	v3.Normal = { 0, 1, 0 };
 	v3.TexCoord = { 1, 0 };
 	vertices.push_back(v0);
 	vertices.push_back(v1);
@@ -150,16 +150,16 @@ Cube::Cube(
 
 	//Face 6
 	v0.Position = { 0.5, -0.5f, 0.0f };
-	v0.Normal = { 0, 0, 1 };
+	v0.Normal = { 0, -1, 0 };
 	v0.TexCoord = { 0, 0 };
 	v1.Position = { -0.5, -0.5f, 0.0f };
-	v1.Normal = { 0, 0, 1 };
+	v1.Normal = { 0, -1, 0 };
 	v1.TexCoord = { 0, 1 };
 	v2.Position = { 0.5, -0.5f, -1.0f };
-	v2.Normal = { 0, 0, 1 };
+	v2.Normal = { 0, -1, 0 };
 	v2.TexCoord = { 1, 1 };
 	v3.Position = { -0.5, -0.5f, -1.0f };
-	v3.Normal = { 0, 0, 1 };
+	v3.Normal = { 0, -1, 0 };
 	v3.TexCoord = { 1, 0 };
 	vertices.push_back(v0);
 	vertices.push_back(v1);

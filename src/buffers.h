@@ -16,3 +16,9 @@ struct TransformationBuffer
 	linalg::mat4f WorldToViewMatrix; //!< Matrix for converting from world space to view space.
 	linalg::mat4f ProjectionMatrix; //!< Matrix for converting from view space to clip cpace.
 };
+
+struct alignas(16) LightCamBuffer
+{
+	alignas(16) vec4f Light_Position;
+	alignas(16) vec4f Camera_Position;
+};
