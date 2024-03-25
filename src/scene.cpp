@@ -32,7 +32,7 @@ OurTestScene::OurTestScene(
 { 
 	InitTransformationBuffer();
 	// + init other CBuffers
-	InitCBuffer();
+	InitLCBuffer();
 }
 
 //
