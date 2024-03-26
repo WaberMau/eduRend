@@ -91,12 +91,14 @@ class OurTestScene : public Scene
 	Model* m_cube;
 	Model* m_cube2;
 	Model* m_cube3;
+	Model* m_sphere;
 
 	mat4f m_sponza_transform;
 	mat4f m_quad_transform;
 	mat4f m_cube_transform;
 	mat4f m_cube_transform2;
 	mat4f m_cube_transform3;
+	mat4f m_sphere_transform;
 
 	mat4f m_view_matrix;
 	mat4f m_projection_matrix;

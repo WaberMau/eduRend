@@ -146,7 +146,7 @@ void OBJLoader::LoadMaterials(
         }
         else if (sscanf_s(line.c_str(), "Ks %f %f %f", &a, &b, &c) == 3)
         {
-            current_mtl->SpecularColour = vec3f(a, b, c);
+            current_mtl->SpecularColour = vec4f(a, b, c, 16);
         }
     }
     in.close();

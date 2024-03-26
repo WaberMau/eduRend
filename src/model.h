@@ -34,15 +34,15 @@ protected:
 	ID3D11Buffer* m_index_buffer = nullptr; //!< Pointer to gpu side index buffer
 	ID3D11Buffer* m_material_buffer = nullptr;
 
-	Material default_material;
-
 public:
-
+	Material default_material;
 	/**
 	 * @brief Sets the protected member variables to the input params.
 	 * @param dxdevice ID3D11Device to be used in the model.
 	 * @param dxdevice_context ID3D11DeviceContext to be used in the model.
 	*/
+
+	//TODO: Make Model.cpp
 	Model(ID3D11Device* dxdevice, ID3D11DeviceContext* dxdevice_context) 
 		:	m_dxdevice(dxdevice), m_dxdevice_context(dxdevice_context) {
 		HRESULT hr;

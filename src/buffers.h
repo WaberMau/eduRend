@@ -27,5 +27,5 @@ struct alignas(16) MaterialBuffer
 {
 	alignas(16) vec3f Ambient;
 	alignas(16) vec3f Diffuse;
-	alignas(16) vec3f Specular;
+	alignas(16) vec4f Specular;
 };

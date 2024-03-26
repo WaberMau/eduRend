@@ -55,6 +55,14 @@ void OurTestScene::Init()
 	m_cube2 = new Cube(m_dxdevice, m_dxdevice_context);
 	m_cube3 = new Cube(m_dxdevice, m_dxdevice_context);
 	m_sponza = new OBJModel("assets/crytek-sponza/sponza.obj", m_dxdevice, m_dxdevice_context);
+	m_sphere = new OBJModel("assets/sphere/sphere.obj", m_dxdevice, m_dxdevice_context);
+
+	m_sphere->default_material.AmbientColour = vec3f(0.0f, 0.0f, 0.1f);
+	m_sphere->default_material.DiffuseColour = vec3f(0.0f, 0.0f, 0.5f);
+	m_sphere->default_material.SpecularColour = vec4f(1.0f, 1.0f, 1.0f, 32);
+
+	testLight.z = 50;
+	testLight.y = 5;
 }
 
 //
@@ -121,6 +129,10 @@ void OurTestScene::Update(
 		mat4f::rotation(fPI / 2, 0.0f, 1.0f, 0.0f) * // Rotate pi/2 radians (90 degrees) around y
 		mat4f::scaling(0.05f);						 // The scene is quite large so scale it down to 5%
 
+	m_sphere_transform = mat4f::translation(0, 5, 0) *		 // Move down 5 units
+		mat4f::rotation(fPI / 2, 0.0f, 1.0f, 0.0f) * // Rotate pi/2 radians (90 degrees) around y
+		mat4f::scaling(1.0f);
+
 	// Increment the rotation angle.
 	m_angle += m_angular_velocity * dt;
 
@@ -132,6 +144,8 @@ void OurTestScene::Update(
 //		printf("fps %i\n", (int)(1.0f / dt));
 		m_fps_cooldown = 2.0;
 	}
+
+	testLight.z -= 0.05f;
 }
 
 //
@@ -165,6 +179,9 @@ void OurTestScene::Render()
 	UpdateTransformationBuffer(m_sponza_transform, m_view_matrix, m_projection_matrix);
 	m_sponza->Render();
 
+	UpdateTransformationBuffer(m_sphere_transform, m_view_matrix, m_projection_matrix);
+	m_sphere->Render();
+
 	UpdateLCBuffer();
 }
 
@@ -172,7 +189,10 @@ void OurTestScene::Release()
 {
 	SAFE_DELETE(m_quad);
 	SAFE_DELETE(m_cube);
+	SAFE_DELETE(m_cube2);
+	SAFE_DELETE(m_cube3);
 	SAFE_DELETE(m_sponza);
+	SAFE_DELETE(m_sphere);
 	SAFE_DELETE(m_camera);
 
 	SAFE_RELEASE(m_transformation_buffer);
@@ -236,9 +256,6 @@ void OurTestScene::UpdateLCBuffer()
 	D3D11_MAPPED_SUBRESOURCE resource;
 	m_dxdevice_context->Map(lightcam_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
 	LightCamBuffer* LCBuffer = (LightCamBuffer*)resource.pData;
-	//TODO: Clean up
-	testLight.z = 3;
-	testLight.y = 5;
 	LCBuffer->Light_Position = testLight;
 	LCBuffer->Camera_Position = vec4f(m_camera->m_position, 0);
 	//matrixBuffer->WorldToViewMatrix = WorldToViewMatrix;
