@@ -114,11 +114,9 @@ class OurTestScene : public Scene
 	float mouse_sensitivity = 200.0f;
 
 	void InitTransformationBuffer();
-
 	void InitLCBuffer();
 
 	void UpdateTransformationBuffer(mat4f model_to_world_matrix, mat4f world_to_view_matrix, mat4f projection_matrix);
-
 	void UpdateLCBuffer();
 
 public:

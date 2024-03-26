@@ -1,4 +1,6 @@
 #include "Cube.h"
+#include "drawcall.h"
+#include "buffers.h"
 
 Cube::Cube(
 	ID3D11Device* dxdevice,
@@ -11,6 +13,8 @@ Cube::Cube(
 	std::vector<unsigned> indices;
 
 	Vertex v;
+	
+	default_material.AmbientColour = vec3f(0.1f, 0.0f, 0.1f);
 
 	//Face 1
 	Vertex v0, v1, v2, v3, v4;
@@ -218,6 +222,19 @@ void Cube::Render() const
 	// Bind our index buffer
 	m_dxdevice_context->IASetIndexBuffer(m_index_buffer, DXGI_FORMAT_R32_UINT, 0);
 
+	//bind material buffer
+	m_dxdevice_context->PSSetConstantBuffers(1, 1, &m_material_buffer);
+
 	// Make the drawcall
 	m_dxdevice_context->DrawIndexed(m_number_of_indices, 0, 0);
+
+	
+
+	D3D11_MAPPED_SUBRESOURCE resource;
+	m_dxdevice_context->Map(m_material_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+	MaterialBuffer* materialbuffer = (MaterialBuffer*)resource.pData;
+	materialbuffer->Ambient = default_material.AmbientColour;
+	materialbuffer->Diffuse = default_material.DiffuseColour;
+	materialbuffer->Specular = default_material.SpecularColour;
+	m_dxdevice_context->Unmap(m_material_buffer, 0);
 }

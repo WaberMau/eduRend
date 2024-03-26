@@ -22,3 +22,10 @@ struct alignas(16) LightCamBuffer
 	alignas(16) vec4f Light_Position;
 	alignas(16) vec4f Camera_Position;
 };
+
+struct alignas(16) MaterialBuffer 
+{
+	alignas(16) vec3f Ambient;
+	alignas(16) vec3f Diffuse;
+	alignas(16) vec3f Specular;
+};

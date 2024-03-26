@@ -15,6 +15,7 @@
 #include "Drawcall.h"
 #include "OBJLoader.h"
 #include "Texture.h"
+#include "buffers.h"
 
 using namespace linalg;
 
@@ -31,6 +32,9 @@ protected:
 	// Pointers to the class' vertex & index arrays
 	ID3D11Buffer* m_vertex_buffer = nullptr; //!< Pointer to gpu side vertex buffer
 	ID3D11Buffer* m_index_buffer = nullptr; //!< Pointer to gpu side index buffer
+	ID3D11Buffer* m_material_buffer = nullptr;
+
+	Material default_material;
 
 public:
 
@@ -40,7 +44,17 @@ public:
 	 * @param dxdevice_context ID3D11DeviceContext to be used in the model.
 	*/
 	Model(ID3D11Device* dxdevice, ID3D11DeviceContext* dxdevice_context) 
-		:	m_dxdevice(dxdevice), m_dxdevice_context(dxdevice_context) { }
+		:	m_dxdevice(dxdevice), m_dxdevice_context(dxdevice_context) {
+		HRESULT hr;
+		D3D11_BUFFER_DESC matrixBufferDesc = { 0 };
+		matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+		matrixBufferDesc.ByteWidth = sizeof(MaterialBuffer);
+		matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		matrixBufferDesc.MiscFlags = 0;
+		matrixBufferDesc.StructureByteStride = 0;
+		ASSERT(hr = m_dxdevice->CreateBuffer(&matrixBufferDesc, nullptr, &m_material_buffer));
+	}
 
 	/**
 	 * @brief Abstract render method: must be implemented by derived classes

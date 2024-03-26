@@ -238,7 +238,7 @@ void OurTestScene::UpdateLCBuffer()
 	LightCamBuffer* LCBuffer = (LightCamBuffer*)resource.pData;
 	//TODO: Clean up
 	testLight.z = 3;
-	testLight.y = 1;
+	testLight.y = 5;
 	LCBuffer->Light_Position = testLight;
 	LCBuffer->Camera_Position = vec4f(m_camera->m_position, 0);
 	//matrixBuffer->WorldToViewMatrix = WorldToViewMatrix;

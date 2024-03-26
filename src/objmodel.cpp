@@ -106,6 +106,16 @@ void OBJModel::Render() const
 		m_dxdevice_context->PSSetShaderResources(0, 1, &material.DiffuseTexture.TextureView);
 		// + bind other textures here, e.g. a normal map, to appropriate slots
 
+		m_dxdevice_context->PSSetConstantBuffers(1, 1, &m_material_buffer);
+
+		D3D11_MAPPED_SUBRESOURCE resource;
+		m_dxdevice_context->Map(m_material_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+		MaterialBuffer* materialbuffer = (MaterialBuffer*)resource.pData;
+		materialbuffer->Ambient = default_material.AmbientColour;
+		materialbuffer->Diffuse = default_material.DiffuseColour;
+		materialbuffer->Specular = default_material.SpecularColour;
+		m_dxdevice_context->Unmap(m_material_buffer, 0);
+
 		// Make the drawcall
 		m_dxdevice_context->DrawIndexed(indexRange.Size, indexRange.Start, 0);
 	}
