@@ -9,9 +9,9 @@ cbuffer LightCamBuffer : register(b0)
 
 cbuffer MaterialBuffer : register(b1)
 {
-	float4 Ambient : Ambient;
-	float4 Diffuse : Diffuse;
-	float4 Specular : Specular;
+	float4 Ambient;
+	float4 Diffuse;
+	float4 Specular;
 }
 
 struct PSIn
@@ -29,26 +29,21 @@ struct PSIn
 float4 PS_main(PSIn input) : SV_Target
 {
 
-	//// Calculate light direction
 	//   float3 lightDir = normalize(LPos.xyz - input.PosWorld);
-
-	//   // Calculate view direction
+	// 
 	//   float3 viewDir = normalize(CPos.xyz - input.PosWorld);
-
-	//   // Calculate reflection direction
+	// 
 	//   float3 reflectDir = reflect(-lightDir, input.Normal);
-
-	//   // Calculate diffuse
+	// 
 	//   float diffFactor = max(0.0f, dot(input.Normal, lightDir) - Diffuse);
+	// 
 	//   //diffFactor -= 0.3f;
 
 	//   //if (diffFactor < 0.0f)
 	//	  // diffFactor = 0.0f;
 
-	//   // Calculate specular
 	//   float specFactor = pow(max(0.0f, dot(reflectDir, viewDir) - Specular), 32);
 
-	//   // Combine diffuse and specular (no texture)
 	//   float4 finalColor = float4(Ambient + (diffFactor + specFactor), ambient + (diffFactor + specFactor), ambient + (diffFactor + specFactor), 1.0f);
 
 	//   //float4 finalColor = float4(specFactor, specFactor, specFactor, 1.0f);
@@ -56,19 +51,18 @@ float4 PS_main(PSIn input) : SV_Target
 	//   return finalColor;
 
 	float3 L = normalize(LPos.xyz - input.PosWorld);
-	//skalär av normalen och dir
+
 	float LN = max(0.0f, dot(input.Normal, L));
 
 	float3 R = reflect(-L, input.Normal);
 
-	//float4 V = normalize(cameraPos - input.PosWorld);
 	float3 V = normalize(CPos.xyz - input.PosWorld);
 
 	float  RV = pow(max(0.0f, dot(R, V)), Specular.w);
 
-	float4 i = Ambient + ((Diffuse * LN) + (Specular * RV));
+	float4 I = Ambient + ((Diffuse * LN) + (Specular * RV));
 
-	return i;
+	return I;
 
 	// Debug shading #1: map and return normal as a color, i.e. from [-1,1]->[0,1] per component
 	// The 4:th component is opacity and should be = 1
