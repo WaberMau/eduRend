@@ -62,7 +62,7 @@ void OurTestScene::Init()
 	m_sphere->default_material.SpecularColour = vec4f(1.0f, 1.0f, 1.0f, 32);
 
 	testLight.z = 50;
-	testLight.y = 5;
+	testLight.y = 3;
 }
 
 //
@@ -73,6 +73,8 @@ void OurTestScene::Update(
 	float dt,
 	const InputHandler& input_handler)
 {
+
+
 
 	mousedx += (float)input_handler.GetMouseDeltaX() / mouse_sensitivity;
 	mousedy += (float)input_handler.GetMouseDeltaY() / mouse_sensitivity;
@@ -146,6 +148,18 @@ void OurTestScene::Update(
 	}
 
 	testLight.z -= 0.05f;
+
+	if (input_handler.IsKeyPressed(Keys::One))
+	{
+		m_sponza->sd.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+		m_dxdevice->CreateSamplerState(&m_sponza->sd, &m_sponza->samplerState);
+	}
+
+	if (input_handler.IsKeyPressed(Keys::Two))
+	{
+		m_sponza->sd.Filter = D3D11_FILTER_ANISOTROPIC;
+		m_dxdevice->CreateSamplerState(&m_sponza->sd, &m_sponza->samplerState);
+	}
 }
 
 //

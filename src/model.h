@@ -36,25 +36,16 @@ protected:
 
 public:
 	Material default_material;
+
+	ID3D11SamplerState* samplerState;
+	D3D11_SAMPLER_DESC sd;
 	/**
 	 * @brief Sets the protected member variables to the input params.
 	 * @param dxdevice ID3D11Device to be used in the model.
 	 * @param dxdevice_context ID3D11DeviceContext to be used in the model.
 	*/
 
-	//TODO: Make Model.cpp
-	Model(ID3D11Device* dxdevice, ID3D11DeviceContext* dxdevice_context) 
-		:	m_dxdevice(dxdevice), m_dxdevice_context(dxdevice_context) {
-		HRESULT hr;
-		D3D11_BUFFER_DESC matrixBufferDesc = { 0 };
-		matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-		matrixBufferDesc.ByteWidth = sizeof(MaterialBuffer);
-		matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		matrixBufferDesc.MiscFlags = 0;
-		matrixBufferDesc.StructureByteStride = 0;
-		ASSERT(hr = m_dxdevice->CreateBuffer(&matrixBufferDesc, nullptr, &m_material_buffer));
-	}
+	Model(ID3D11Device* dxdevice, ID3D11DeviceContext* dxdevice_context);
 
 	/**
 	 * @brief Abstract render method: must be implemented by derived classes
@@ -69,6 +60,7 @@ public:
 	{ 
 		SAFE_RELEASE(m_vertex_buffer);
 		SAFE_RELEASE(m_index_buffer);
+		SAFE_RELEASE(m_material_buffer);
 	}
 };
 

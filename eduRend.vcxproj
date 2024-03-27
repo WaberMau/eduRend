@@ -178,6 +178,9 @@
     <ClInclude Include="src\window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="model.cpp">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\Waber\Documents\GitHub\eduRend\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\cube.cpp" />
     <ClCompile Include="src\inputhandler.cpp" />

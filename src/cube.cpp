@@ -14,9 +14,12 @@ Cube::Cube(
 
 	Vertex v;
 	
-	default_material.AmbientColour = vec3f(0.1f, 0.0f, 0.1f);
+	default_material.AmbientColour = vec3f(0.1f, 0.1f, 0.1f);
+	default_material.DiffuseTextureFilename = "assets/textures/wood.png";
 
-	//Face 1
+	
+
+	//Face 1 Front
 	Vertex v0, v1, v2, v3, v4;
 	v0.Position = { -0.5, -0.5f, 0.0f };
 	v0.Normal = { 0, 0, 1 };
@@ -44,14 +47,14 @@ Cube::Cube(
 	indices.push_back(2);
 	indices.push_back(3);
 
-	//Face 2
-	v0.Position = { -0.5, -0.5f, 0.0f };
+	//Face 2 Left Side
+	v0.Position = { -0.5, -0.5f, -1.0f };
 	v0.Normal = { -1, 0, 0 };
 	v0.TexCoord = { 0, 0 };
-	v1.Position = { -0.5, 0.5f, 0.0f };
+	v1.Position = { -0.5, -0.5f, 0.0f };
 	v1.Normal = { -1, 0, 0 };
 	v1.TexCoord = { 0, 1 };
-	v2.Position = { -0.5, -0.5f, -1.0f };
+	v2.Position = { -0.5, 0.5f, 0.0f };
 	v2.Normal = { -1, 0, 0 };
 	v2.TexCoord = { 1, 1 };
 	v3.Position = { -0.5, 0.5f, -1.0f };
@@ -67,18 +70,18 @@ Cube::Cube(
 	indices.push_back(5);
 	indices.push_back(7);
 	// Triangle #2
-	indices.push_back(7);
+	indices.push_back(5);
 	indices.push_back(6);
-	indices.push_back(4);
+	indices.push_back(7);
 
-	//Face 3
-	v0.Position = { -0.5, -0.5f, -1.0f };
+	//Face 3 Back
+	v0.Position = { 0.5, -0.5f, -1.0f };
 	v0.Normal = { 0, 0, -1 };
 	v0.TexCoord = { 0, 0 };
-	v1.Position = { -0.5, 0.5f, -1.0f };
+	v1.Position = { -0.5, -0.5f, -1.0f };
 	v1.Normal = { 0, 0, -1 };
 	v1.TexCoord = { 0, 1 };
-	v2.Position = { 0.5, -0.5f, -1.0f };
+	v2.Position = { -0.5, 0.5f, -1.0f };
 	v2.Normal = { 0, 0, -1 };
 	v2.TexCoord = { 1, 1 };
 	v3.Position = { 0.5, 0.5f, -1.0f };
@@ -94,21 +97,21 @@ Cube::Cube(
 	indices.push_back(9);
 	indices.push_back(11);
 	// Triangle #2
-	indices.push_back(11);
+	indices.push_back(9);
 	indices.push_back(10);
-	indices.push_back(8);
+	indices.push_back(11);
 
-	//Face 4
+	//Face 4 Right Side
 	v0.Position = { 0.5, -0.5f, 0.0f };
 	v0.Normal = { 1, 0, 0 };
 	v0.TexCoord = { 0, 0 };
-	v1.Position = { 0.5, 0.5f, 0.0f };
+	v1.Position = { 0.5, -0.5f, -1.0f };
 	v1.Normal = { 1, 0, 0 };
 	v1.TexCoord = { 0, 1 };
-	v2.Position = { 0.5, -0.5f, -1.0f };
+	v2.Position = { 0.5, 0.5f, -1.0f };
 	v2.Normal = { 1, 0, 0 };
 	v2.TexCoord = { 1, 1 };
-	v3.Position = { 0.5, 0.5f, -1.0f };
+	v3.Position = { 0.5, 0.5f, 0.0f };
 	v3.Normal = { 1, 0, 0 };
 	v3.TexCoord = { 1, 0 };
 	vertices.push_back(v0);
@@ -117,19 +120,19 @@ Cube::Cube(
 	vertices.push_back(v3);
 
 	// Triangle #1
-	indices.push_back(15);
+	indices.push_back(12);
 	indices.push_back(13);
-	indices.push_back(12);
+	indices.push_back(15);
 	// Triangle #2
-	indices.push_back(12);
+	indices.push_back(13);
 	indices.push_back(14);
 	indices.push_back(15);
 
-	//Face 5
-	v0.Position = { 0.5, 0.5f, 0.0f };
+	//Face 5 Top
+	v0.Position = { -0.5, 0.5f, 0.0f };
 	v0.Normal = { 0, 1, 0 };
 	v0.TexCoord = { 0, 0 };
-	v1.Position = { -0.5, 0.5f, 0.0f };
+	v1.Position = { 0.5, 0.5f, 0.0f };
 	v1.Normal = { 0, 1, 0 };
 	v1.TexCoord = { 0, 1 };
 	v2.Position = { 0.5, 0.5f, -1.0f };
@@ -144,25 +147,25 @@ Cube::Cube(
 	vertices.push_back(v3);
 
 	// Triangle #1
-	indices.push_back(19);
+	indices.push_back(16);
 	indices.push_back(17);
-	indices.push_back(16);
+	indices.push_back(19);
 	// Triangle #2
-	indices.push_back(16);
+	indices.push_back(17);
 	indices.push_back(18);
 	indices.push_back(19);
 
-	//Face 6
-	v0.Position = { 0.5, -0.5f, 0.0f };
+	//Face 6 Bottom
+	v0.Position = { -0.5, -0.5f, -1.0f };
 	v0.Normal = { 0, -1, 0 };
 	v0.TexCoord = { 0, 0 };
-	v1.Position = { -0.5, -0.5f, 0.0f };
+	v1.Position = { 0.5, -0.5f, -1.0f };
 	v1.Normal = { 0, -1, 0 };
 	v1.TexCoord = { 0, 1 };
-	v2.Position = { 0.5, -0.5f, -1.0f };
+	v2.Position = { 0.5, -0.5f, 0.0f };
 	v2.Normal = { 0, -1, 0 };
 	v2.TexCoord = { 1, 1 };
-	v3.Position = { -0.5, -0.5f, -1.0f };
+	v3.Position = { -0.5, -0.5f, 0.0f };
 	v3.Normal = { 0, -1, 0 };
 	v3.TexCoord = { 1, 0 };
 	vertices.push_back(v0);
@@ -171,13 +174,13 @@ Cube::Cube(
 	vertices.push_back(v3);
 
 	// Triangle #1
-	indices.push_back(23);
-	indices.push_back(22);
-	indices.push_back(21);
-	// Triangle #2
 	indices.push_back(20);
 	indices.push_back(21);
+	indices.push_back(23);
+	// Triangle #2
+	indices.push_back(21);
 	indices.push_back(22);
+	indices.push_back(23);
 
 
 	// Vertex array descriptor
@@ -209,6 +212,30 @@ Cube::Cube(
 	SETNAME(m_index_buffer, "IndexBuffer");
 
 	m_number_of_indices = (unsigned int)indices.size();
+
+	//std::cout << "Loading textures..." << std::endl;
+	//
+	//HRESULT hr;
+
+	//// Load Diffuse texture
+	////
+	//if (default_material.DiffuseTextureFilename.size()) {
+
+	//	hr = LoadTextureFromFile(
+	//		dxdevice,
+	//		default_material.DiffuseTextureFilename.c_str(),
+	//		&default_material.DiffuseTexture);
+	//	std::cout << "\t" << default_material.DiffuseTextureFilename
+	//		<< (SUCCEEDED(hr) ? " - OK" : "- FAILED") << std::endl;
+	//}
+
+	//// + other texture types here - see Material class
+	//// ...
+	//
+	//std::cout << "Done." << std::endl;
+
+	if (default_material.DiffuseTextureFilename.size())
+		LoadTextureFromFile(dxdevice, dxdevice_context, default_material.DiffuseTextureFilename.c_str(), &default_material.DiffuseTexture);
 }
 
 
@@ -224,6 +251,8 @@ void Cube::Render() const
 
 	//bind material buffer
 	m_dxdevice_context->PSSetConstantBuffers(1, 1, &m_material_buffer);
+
+	m_dxdevice_context->PSSetShaderResources(0, 1, &default_material.DiffuseTexture.TextureView);
 
 	// Make the drawcall
 	m_dxdevice_context->DrawIndexed(m_number_of_indices, 0, 0);

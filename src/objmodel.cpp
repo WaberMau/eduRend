@@ -72,6 +72,7 @@ OBJModel::OBJModel(
 
 			hr = LoadTextureFromFile(
 				dxdevice,
+				dxdevice_context,
 				material.DiffuseTextureFilename.c_str(),
 				&material.DiffuseTexture);
 			std::cout << "\t" << material.DiffuseTextureFilename
@@ -107,6 +108,8 @@ void OBJModel::Render() const
 		// + bind other textures here, e.g. a normal map, to appropriate slots
 
 		m_dxdevice_context->PSSetConstantBuffers(1, 1, &m_material_buffer);
+
+		m_dxdevice_context->PSSetSamplers(0, 1, &samplerState);
 
 		D3D11_MAPPED_SUBRESOURCE resource;
 		m_dxdevice_context->Map(m_material_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);

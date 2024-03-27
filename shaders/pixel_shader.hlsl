@@ -1,5 +1,6 @@
 
 Texture2D texDiffuse : register(t0);
+SamplerState texSampler : register(s0);
 
 cbuffer LightCamBuffer : register(b0) 
 {
@@ -28,7 +29,7 @@ struct PSIn
 
 float4 PS_main(PSIn input) : SV_Target
 {
-
+	//return float4(input.TexCoord, 0, 1);
 	//   float3 lightDir = normalize(LPos.xyz - input.PosWorld);
 	// 
 	//   float3 viewDir = normalize(CPos.xyz - input.PosWorld);
@@ -60,7 +61,11 @@ float4 PS_main(PSIn input) : SV_Target
 
 	float  RV = pow(max(0.0f, dot(R, V)), Specular.w);
 
-	float4 I = Ambient + ((Diffuse * LN) + (Specular * RV));
+	//float4 I = Ambient + ((Diffuse * LN) + (Specular * RV));
+
+	float4 I = Ambient * texDiffuse.Sample(texSampler, input.TexCoord) + 
+		(((Diffuse * texDiffuse.Sample(texSampler, input.TexCoord)) * LN) + 
+			((Specular * texDiffuse.Sample(texSampler, input.TexCoord)) * RV));
 
 	return I;
 

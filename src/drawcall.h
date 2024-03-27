@@ -36,7 +36,7 @@ struct Vertex
 struct Material
 {
 	vec3f AmbientColour		= { 0.1f, 0.1f, 0.1f }; //!< Ambient colour component
-	vec3f DiffuseColour		= { 0.5f, 0.5f, 0.5f }; //!< Diffuse colour component
+	vec3f DiffuseColour		= { 1.0f, 1.0f, 1.0f }; //!< Diffuse colour component
 	vec4f SpecularColour	= { 0.2f, 0.2f, 0.2f, 32 }; //!< Specular colour component
     
 	std::string Name; //!< Name of the Material
