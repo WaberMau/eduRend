@@ -41,7 +41,8 @@ PSIn VS_main(VSIn input)
 	// Perform transformations and send to output
 	output.Pos = mul(MVP, float4(input.Pos, 1));
 	output.Normal = normalize( mul(ModelToWorldMatrix, float4(input.Normal,0)).xyz );
-	output.TexCoord = input.TexCoord;
+	//float texScale = 15;
+	output.TexCoord = input.TexCoord; //* texScale;
 	output.PosWorld = mul(ModelToWorldMatrix, float4(input.Pos, 0)).xyz;
 		
 	return output;

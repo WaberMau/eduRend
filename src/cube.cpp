@@ -7,17 +7,8 @@ Cube::Cube(
 	ID3D11DeviceContext* dxdevice_context)
 	: Model(dxdevice, dxdevice_context)
 {
-	// Vertex and index arrays
-	// Once their data is loaded to GPU buffers, they are not needed anymore
 	std::vector<Vertex> vertices;
 	std::vector<unsigned> indices;
-
-	Vertex v;
-	
-	default_material.AmbientColour = vec3f(0.1f, 0.1f, 0.1f);
-	default_material.DiffuseTextureFilename = "assets/textures/wood.png";
-
-	
 
 	//Face 1 Front
 	Vertex v0, v1, v2, v3, v4;
@@ -183,81 +174,61 @@ Cube::Cube(
 	indices.push_back(23);
 
 
-	// Vertex array descriptor
 	D3D11_BUFFER_DESC vertexbufferDesc{ 0 };
 	vertexbufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexbufferDesc.CPUAccessFlags = 0;
 	vertexbufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexbufferDesc.MiscFlags = 0;
 	vertexbufferDesc.ByteWidth = (UINT)(vertices.size() * sizeof(Vertex));
-	// Data resource
+
 	D3D11_SUBRESOURCE_DATA vertexData = { 0 };
 	vertexData.pSysMem = &vertices[0];
-	// Create vertex buffer on device using descriptor & data
+
 	dxdevice->CreateBuffer(&vertexbufferDesc, &vertexData, &m_vertex_buffer);
 	SETNAME(m_vertex_buffer, "VertexBuffer");
 
-	//  Index array descriptor
+
 	D3D11_BUFFER_DESC indexbufferDesc = { 0 };
 	indexbufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indexbufferDesc.CPUAccessFlags = 0;
 	indexbufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	indexbufferDesc.MiscFlags = 0;
 	indexbufferDesc.ByteWidth = (UINT)(indices.size() * sizeof(unsigned));
-	// Data resource
+
 	D3D11_SUBRESOURCE_DATA indexData{ 0 };
 	indexData.pSysMem = &indices[0];
-	// Create index buffer on device using descriptor & data
+
 	dxdevice->CreateBuffer(&indexbufferDesc, &indexData, &m_index_buffer);
 	SETNAME(m_index_buffer, "IndexBuffer");
 
 	m_number_of_indices = (unsigned int)indices.size();
 
-	//std::cout << "Loading textures..." << std::endl;
-	//
-	//HRESULT hr;
+	HRESULT hr;
 
-	//// Load Diffuse texture
-	////
-	//if (default_material.DiffuseTextureFilename.size()) {
+	default_material.AmbientColour = vec3f(0.1f, 0.1f, 0.1f);
+	default_material.DiffuseTextureFilename = "assets/textures/wood.png";
 
-	//	hr = LoadTextureFromFile(
-	//		dxdevice,
-	//		default_material.DiffuseTextureFilename.c_str(),
-	//		&default_material.DiffuseTexture);
-	//	std::cout << "\t" << default_material.DiffuseTextureFilename
-	//		<< (SUCCEEDED(hr) ? " - OK" : "- FAILED") << std::endl;
-	//}
+	if (default_material.DiffuseTextureFilename.size()) {
+		hr = LoadTextureFromFile(dxdevice, dxdevice_context, default_material.DiffuseTextureFilename.c_str(), &default_material.DiffuseTexture);
 
-	//// + other texture types here - see Material class
-	//// ...
-	//
-	//std::cout << "Done." << std::endl;
-
-	if (default_material.DiffuseTextureFilename.size())
-		LoadTextureFromFile(dxdevice, dxdevice_context, default_material.DiffuseTextureFilename.c_str(), &default_material.DiffuseTexture);
+		std::cout << "\t" << default_material.DiffuseTextureFilename << (SUCCEEDED(hr) ? " - OK" : "- FAILED") << std::endl;
+	}
+		
 }
 
 
 void Cube::Render() const
 {
-	// Bind our vertex buffer
-	const UINT32 stride = sizeof(Vertex); //  sizeof(float) * 8;
+
+	const UINT32 stride = sizeof(Vertex); 
 	const UINT32 offset = 0;
 	m_dxdevice_context->IASetVertexBuffers(0, 1, &m_vertex_buffer, &stride, &offset);
-
-	// Bind our index buffer
 	m_dxdevice_context->IASetIndexBuffer(m_index_buffer, DXGI_FORMAT_R32_UINT, 0);
 
-	//bind material buffer
 	m_dxdevice_context->PSSetConstantBuffers(1, 1, &m_material_buffer);
-
 	m_dxdevice_context->PSSetShaderResources(0, 1, &default_material.DiffuseTexture.TextureView);
 
-	// Make the drawcall
 	m_dxdevice_context->DrawIndexed(m_number_of_indices, 0, 0);
-
-	
 
 	D3D11_MAPPED_SUBRESOURCE resource;
 	m_dxdevice_context->Map(m_material_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);

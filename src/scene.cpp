@@ -74,16 +74,12 @@ void OurTestScene::Update(
 	const InputHandler& input_handler)
 {
 
-
-
 	mousedx += (float)input_handler.GetMouseDeltaX() / mouse_sensitivity;
 	mousedy += (float)input_handler.GetMouseDeltaY() / mouse_sensitivity;
 	if (mousedy > fPI / 2)
 		mousedy = fPI / 2;
 	if (mousedy < -fPI / 2)
 		mousedy = -fPI / 2;
-
-	//m_camera->WorldToViewMatrix(mousedx, mousedy);
 
 	// Basic camera control
 	if (input_handler.IsKeyPressed(Keys::W))
@@ -98,6 +94,17 @@ void OurTestScene::Update(
 		m_camera->Move({ 0.0f, m_camera_velocity * dt, 0.0f , 0});
 	if (input_handler.IsKeyPressed(Keys::Down))
 		m_camera->Move({ 0.0f, -m_camera_velocity * dt, 0.0f , 0});
+
+	if (input_handler.IsKeyPressed(Keys::One))
+	{
+		m_sponza->sd.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+		m_dxdevice->CreateSamplerState(&m_sponza->sd, &m_sponza->samplerState);
+	}
+	if (input_handler.IsKeyPressed(Keys::Two))
+	{
+		m_sponza->sd.Filter = D3D11_FILTER_ANISOTROPIC;
+		m_dxdevice->CreateSamplerState(&m_sponza->sd, &m_sponza->samplerState);
+	}
 
 	// Now set/update object transformations
 	// This can be done using any sequence of transformation matrices,
@@ -131,8 +138,8 @@ void OurTestScene::Update(
 		mat4f::rotation(fPI / 2, 0.0f, 1.0f, 0.0f) * // Rotate pi/2 radians (90 degrees) around y
 		mat4f::scaling(0.05f);						 // The scene is quite large so scale it down to 5%
 
-	m_sphere_transform = mat4f::translation(0, 5, 0) *		 // Move down 5 units
-		mat4f::rotation(fPI / 2, 0.0f, 1.0f, 0.0f) * // Rotate pi/2 radians (90 degrees) around y
+	m_sphere_transform = mat4f::translation(0, 5, 0) *
+		mat4f::rotation(fPI / 2, 0.0f, 1.0f, 0.0f) * 
 		mat4f::scaling(1.0f);
 
 	// Increment the rotation angle.
@@ -148,18 +155,8 @@ void OurTestScene::Update(
 	}
 
 	testLight.z -= 0.05f;
-
-	if (input_handler.IsKeyPressed(Keys::One))
-	{
-		m_sponza->sd.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
-		m_dxdevice->CreateSamplerState(&m_sponza->sd, &m_sponza->samplerState);
-	}
-
-	if (input_handler.IsKeyPressed(Keys::Two))
-	{
-		m_sponza->sd.Filter = D3D11_FILTER_ANISOTROPIC;
-		m_dxdevice->CreateSamplerState(&m_sponza->sd, &m_sponza->samplerState);
-	}
+	if (testLight.z < -50)
+		testLight.z = 50;
 }
 
 //
