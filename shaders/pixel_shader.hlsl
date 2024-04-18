@@ -1,5 +1,6 @@
 
 Texture2D texDiffuse : register(t0);
+Texture2D texNormal : register(t1);
 SamplerState texSampler : register(s0);
 
 cbuffer LightCamBuffer : register(b0) 
@@ -19,6 +20,8 @@ struct PSIn
 {
 	float4 Pos  : SV_Position;
 	float3 Normal : NORMAL;
+	float3 Tangent : TANGENT;
+	float3 Binormal : BINORMAL;
 	float2 TexCoord : TEX;
 	float3 PosWorld : WORLD_POSITION;
 };
@@ -32,9 +35,17 @@ float4 PS_main(PSIn input) : SV_Target
 
 	float3 L = normalize(LPos.xyz - input.PosWorld);
 
-	float LN = max(0.0f, dot(input.Normal, L));
+	float3 N = texNormal.Sample(texSampler, input.TexCoord).xyz * 2 - 1;
 
-	float3 R = reflect(-L, input.Normal);
+	//float3 Nprime = N.xyz;
+
+	float3x3 TBN = transpose(float3x3(input.Tangent, input.Binormal, input.Normal));
+
+	float3 newN = normalize(mul(TBN, N));
+
+	float LN = max(0.0f, dot(newN, L));
+
+	float3 R = reflect(-L, newN);
 
 	float3 V = normalize(CPos.xyz - input.PosWorld);
 
@@ -45,6 +56,8 @@ float4 PS_main(PSIn input) : SV_Target
 	float4 I = Ambient * texDiffuse.Sample(texSampler, input.TexCoord) + 
 		(((Diffuse * texDiffuse.Sample(texSampler, input.TexCoord)) * LN) + 
 			((Specular * texDiffuse.Sample(texSampler, input.TexCoord)) * RV));
+
+	//return float4(input.Binormal * 0.5 + 0.5, 1);
 
 	return I;
 	

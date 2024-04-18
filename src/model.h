@@ -52,6 +52,8 @@ public:
 	*/
 	virtual void Render() const = 0;
 
+	void Compute_TB(Vertex& v0, Vertex& v1, Vertex& v2);
+
 	/**
 	 * @brief Destructor.
 	 * @details Releases the vertex and index buffers of the Model.

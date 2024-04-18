@@ -173,6 +173,13 @@ Cube::Cube(
 	indices.push_back(22);
 	indices.push_back(23);
 
+	//Compute tangents and binormals
+	for (int i = 0; i < indices.size(); i += 3) // For all triangles
+		Compute_TB(
+			vertices[indices[i + 0]],
+			vertices[indices[i + 1]],
+			vertices[indices[i + 2]]);
+
 
 	D3D11_BUFFER_DESC vertexbufferDesc{ 0 };
 	vertexbufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -206,12 +213,20 @@ Cube::Cube(
 	HRESULT hr;
 
 	default_material.AmbientColour = vec3f(0.1f, 0.1f, 0.1f);
-	default_material.DiffuseTextureFilename = "assets/textures/wood.png";
+	default_material.DiffuseTextureFilename = "assets/textures/stone.png";
 
 	if (default_material.DiffuseTextureFilename.size()) {
 		hr = LoadTextureFromFile(dxdevice, dxdevice_context, default_material.DiffuseTextureFilename.c_str(), &default_material.DiffuseTexture);
 
 		std::cout << "\t" << default_material.DiffuseTextureFilename << (SUCCEEDED(hr) ? " - OK" : "- FAILED") << std::endl;
+	}
+
+	default_material.NormalTextureFilename = "assets/textures/stoneNormal.png";
+
+	if (default_material.NormalTextureFilename.size()) {
+		hr = LoadTextureFromFile(dxdevice, dxdevice_context, default_material.NormalTextureFilename.c_str(), &default_material.NormalTexture);
+
+		std::cout << "\t" << default_material.NormalTextureFilename << (SUCCEEDED(hr) ? " - OK" : "- FAILED") << std::endl;
 	}
 		
 }
@@ -227,6 +242,7 @@ void Cube::Render() const
 
 	m_dxdevice_context->PSSetConstantBuffers(1, 1, &m_material_buffer);
 	m_dxdevice_context->PSSetShaderResources(0, 1, &default_material.DiffuseTexture.TextureView);
+	m_dxdevice_context->PSSetShaderResources(1, 1, &default_material.NormalTexture.TextureView);
 
 	m_dxdevice_context->DrawIndexed(m_number_of_indices, 0, 0);
 
