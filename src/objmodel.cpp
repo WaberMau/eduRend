@@ -66,6 +66,26 @@ OBJModel::OBJModel(
 	// Copy materials from mesh
 	append_materials(mesh->Materials);
 
+	const char* cube_filenames[6] =
+	{
+	   "assets/cubemaps/cloudyhillscube/cloudyhills_posx.png",
+	   "assets/cubemaps/cloudyhillscube/cloudyhills_negx.png",
+	   "assets/cubemaps/cloudyhillscube/cloudyhills_posy.png",
+	   "assets/cubemaps/cloudyhillscube/cloudyhills_negy.png",
+	   "assets/cubemaps/cloudyhillscube/cloudyhills_posz.png",
+	   "assets/cubemaps/cloudyhillscube/cloudyhills_negz.png"
+	};
+
+	//const char* cube_filenames[6] =
+	//{
+	//   "assets/cubemaps/Skybox/Skybox-posx.png",
+	//   "assets/cubemaps/Skybox/Skybox-negx.png",
+	//   "assets/cubemaps/Skybox/Skybox-posy.png",
+	//   "assets/cubemaps/Skybox/Skybox-negy.png",
+	//   "assets/cubemaps/Skybox/Skybox-posz.png",
+	//   "assets/cubemaps/Skybox/Skybox-negz.png"
+	//};
+
 	// Go through materials and load textures (if any) to device
 	std::cout << "Loading textures..." << std::endl;
 	for (auto& material : m_materials)
@@ -95,6 +115,24 @@ OBJModel::OBJModel(
 			std::cout << "\t" << material.NormalTextureFilename
 				<< (SUCCEEDED(hr) ? " - OK" : "- FAILED") << std::endl;
 		}
+
+		hr = LoadCubeTextureFromFile(
+			dxdevice,
+			cube_filenames,
+			&material.CubeMap);
+
+		if (SUCCEEDED(hr)) std::cout << "Cubemap OK" << std::endl;
+		else std::cout << "Cubemap failed to load" << std::endl;
+
+		unsigned cube_slot = 2;
+		dxdevice_context->PSSetShaderResources(
+			cube_slot,
+			1,
+			&material.CubeMap.TextureView);
+
+		SAFE_RELEASE(material.CubeMap.TextureView);
+
+
 		// + other texture types here - see Material class
 		// ...
 	}
@@ -148,7 +186,9 @@ OBJModel::~OBJModel()
 	for (auto& material : m_materials)
 	{
 		SAFE_RELEASE(material.DiffuseTexture.TextureView);
+		SAFE_RELEASE(material.NormalTexture.TextureView);
 
+		SAFE_RELEASE(material.CubeMap.TextureView);
 		// Release other used textures ...
 	}
 }

@@ -51,17 +51,52 @@ void Model::Compute_TB(Vertex& v0, Vertex& v1, Vertex& v2)
 	binormal.y = -G.x * D.y + F.x * E.y;
 	binormal.z = -G.x * D.z + F.x * E.z;
 
-	vec3f determinant = 1 / (F.x * G.y - F.y * G.x);
+	vec3f determinant = 1 / ((F.x * G.y) - (F.y * G.x));
 	tangent *= determinant;
 	binormal *= determinant;
 
 	tangent.normalize();
 	binormal.normalize();
 
-	// TODO: compute the 'tangent' and 'binormal' vectors
-	//       using Lengyel’s method, as given in lecture
-
 	// Now assign the newly computed vectors to the vertices
 	v0.Tangent = v1.Tangent = v2.Tangent = tangent;
 	v0.Binormal = v1.Binormal = v2.Binormal = binormal;
 }
+
+//void Model::Compute_TB(Vertex& v0, Vertex& v1, Vertex& v2) {
+//
+//	vec3f tangent, binormal;
+//
+//	vec3f D = v1.Position - v0.Position;
+//	vec3f E = v2.Position - v0.Position;
+//	vec2f F = v1.TexCoord - v0.TexCoord;
+//	vec2f G = v2.TexCoord - v0.TexCoord;
+//
+//	//linalg::mat2f FG = { F.x, F.y, G.x, G.y };
+//	linalg::mat3f DE = { D.x, D.y, D.z, E.x, E.y, E.z, 0,0,0 };
+//
+//	float number = 1.0f / (F.x * G.y - F.y * G.x);
+//
+//	linalg::mat2f FG = { G.y * number, -F.y * number, -G.x * number, F.x * number };
+//
+//	tangent.x = FG.m11 * DE.m11 + FG.m12 * DE.m21;
+//	tangent.y = FG.m11 * DE.m12 + FG.m12 * DE.m22;
+//	tangent.z = FG.m11 * DE.m13 + FG.m12 * DE.m23;
+//
+//	binormal.x = FG.m21 * DE.m11 + FG.m22 * DE.m21;
+//	binormal.y = FG.m21 * DE.m12 + FG.m22 * DE.m22;
+//	binormal.z = FG.m21 * DE.m13 + FG.m22 * DE.m23;
+//
+//	// Gram-Schmidt orthogonalization
+//	/*tangent = tangent - v0.Normal * dot(tangent, v0.Normal);
+//	binormal = binormal - v0.Normal * dot(binormal, v0.Normal) - tangent * dot(binormal, tangent);*/
+//	// TODO: compute the 'tangent' and 'binormal' vectors
+//	//       using Lengyel’s method, as given in lecture
+//
+//	//binormal = CustomNormalize(binormal);
+//	//tangent = CustomNormalize(tangent);
+//
+//	// Now assign the newly computed vectors to the vertices
+//	v0.Tangent = v1.Tangent = v2.Tangent = tangent;
+//	v0.Binormal = v1.Binormal = v2.Binormal = binormal;
+//};

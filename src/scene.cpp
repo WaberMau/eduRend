@@ -59,7 +59,7 @@ void OurTestScene::Init()
 
 	m_sphere->default_material.AmbientColour = vec3f(0.0f, 0.0f, 0.1f);
 	m_sphere->default_material.DiffuseColour = vec3f(0.0f, 0.0f, 0.5f);
-	m_sphere->default_material.SpecularColour = vec4f(1.0f, 1.0f, 1.0f, 32);
+	m_sphere->default_material.SpecularColour = vec4f(1.0f, 1.0f, 1.0f, 8);
 
 	testLight.z = 50;
 	testLight.y = 3;

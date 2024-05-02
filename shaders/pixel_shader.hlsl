@@ -3,6 +3,9 @@ Texture2D texDiffuse : register(t0);
 Texture2D texNormal : register(t1);
 SamplerState texSampler : register(s0);
 
+TextureCube cubeTexture : register(t2);
+SamplerState cubeSampler : register(s1);
+
 cbuffer LightCamBuffer : register(b0) 
 {
 	float4 LPos : Light_Position;
@@ -35,7 +38,11 @@ float4 PS_main(PSIn input) : SV_Target
 
 	float3 L = normalize(LPos.xyz - input.PosWorld);
 
-	float3 N = texNormal.Sample(texSampler, input.TexCoord).xyz * 2 - 1;
+	float3 N = texNormal.Sample(texSampler, input.TexCoord).xyz * 2.0 - 1.0;
+		
+	//float3 N = GetNormal(input.TexCoord);
+
+	float4 cubeMap = cubeTexture.Sample(texSampler, reflect(-CPos.xyz, input.Normal));
 
 	//float3 Nprime = N.xyz;
 
@@ -43,9 +50,17 @@ float4 PS_main(PSIn input) : SV_Target
 
 	float3 newN = normalize(mul(TBN, N));
 
-	float LN = max(0.0f, dot(newN, L));
+	float LN;
+	float3 R;
 
-	float3 R = reflect(-L, newN);
+	if (N.x == -1) {
+		LN = max(0.0f, dot(input.Normal, L));
+		R = reflect(-L, input.Normal);
+	}
+	else {
+		LN = max(0.0f, dot(newN, L));
+		R = reflect(-L, newN);
+	}
 
 	float3 V = normalize(CPos.xyz - input.PosWorld);
 
@@ -53,11 +68,17 @@ float4 PS_main(PSIn input) : SV_Target
 
 	//float4 I = Ambient + ((Diffuse * LN) + (Specular * RV));
 
-	float4 I = Ambient * texDiffuse.Sample(texSampler, input.TexCoord) + 
+	/*float4 I = Ambient * texDiffuse.Sample(texSampler, input.TexCoord) + 
 		(((Diffuse * texDiffuse.Sample(texSampler, input.TexCoord)) * LN) + 
-			((Specular * texDiffuse.Sample(texSampler, input.TexCoord)) * RV));
+			((Specular * texDiffuse.Sample(texSampler, input.TexCoord)) * RV));*/
+
+	float4 I = Ambient * texDiffuse.Sample(texSampler, input.TexCoord) +
+		(((Diffuse * texDiffuse.Sample(texSampler, input.TexCoord)) * LN) +
+			(cubeMap * RV));
 
 	//return float4(input.Binormal * 0.5 + 0.5, 1);
+
+	//return cubeMap;
 
 	return I;
 	
